@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CampusPath - Dashboard</title>
+  <style>
+    :root{--navy:#0f172a;--accent:#3b82f6;--white:#ffffff;--muted:rgba(255,255,255,.7);--card:rgba(255,255,255,.06);--card2:rgba(255,255,255,.08);--shadow:0 18px 50px rgba(0,0,0,.35);--border:rgba(255,255,255,.12)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:linear-gradient(180deg,#0b1227, #0f172a 55%, #0b1227);color:var(--white);min-height:100vh}
+
+    .nav{position:sticky;top:0;z-index:10;background:rgba(15,23,42,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08)}
+    .navInner{max-width:1100px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logoBox{width:44px;height:44px;border-radius:14px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.35);display:grid;place-items:center;font-size:20px}
+    .brandTitle{font-weight:900;letter-spacing:.2px}
+    .brandSub{font-size:12px;color:var(--muted);margin-top:2px}
+
+    .navActions{display:flex;align-items:center;gap:12px}
+    .pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px 12px;display:flex;align-items:center;gap:8px}
+    .pill b{font-size:13px}
+    .btn{padding:10px 14px;border:none;border-radius:12px;cursor:pointer;font-weight:800;transition:transform .08s ease, filter .2s, background .2s}
+    .btn:active{transform:translateY(1px)}
+    .btnBlue{background:var(--accent);color:white}
+    .btnGhost{background:transparent;color:white;border:1px solid rgba(255,255,255,.14)}
+    .btnGhost:hover{filter:brightness(1.05)}
+    .container{max-width:1100px;margin:0 auto;padding:20px 18px 60px}
+
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+    .col6{grid-column:span 6}
+    .col4{grid-column:span 4}
+    @media (max-width:900px){.col6{grid-column:span 12}.col4{grid-column:span 12}.navInner{flex-direction:column;align-items:flex-start}}
+
+    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+    .cardSoft{background:var(--card2)}
+    .h2{margin:0 0 10px;font-size:16px;letter-spacing:.2px}
+    .muted{color:var(--muted)}
+
+    .stat{display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+    .stat .big{font-size:34px;font-weight:900}
+    .tag{font-size:12px;color:rgba(255,255,255,.75);padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.12)}
+
+    .planHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+    .planSteps{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+
+    .sem{border-radius:16px;border:1px dashed rgba(255,255,255,.18);background:rgba(255,255,255,.04);padding:14px}
+    .semTitle{font-weight:900;margin-bottom:10px}
+    .courseChips{display:flex;flex-wrap:wrap;gap:10px}
+
+    .chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.12)}
+    .chip .c{font-weight:900}
+    .chip .s{font-size:12px;color:var(--muted)}
+
+    .ok{border-color:rgba(16,185,129,.35)}
+    .ok .emoji{color:#34d399}
+    .info{border-color:rgba(59,130,246,.35)}
+    .info .emoji{color:#60a5fa}
+    .warn{border-color:rgba(239,68,68,.35)}
+    .warn .emoji{color:#f87171}
+
+    .navLinks{display:flex;gap:12px;align-items:center}
+    .navLink{color:white;text-decoration:none;font-weight:800;font-size:13px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10)}
+    .navLink:hover{filter:brightness(1.06)}
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div class="navInner">
+      <div class="brand">
+        <div class="logoBox" aria-hidden="true">🎓</div>
+        <div>
+          <div class="brandTitle">CampusPath</div>
+          <div class="brandSub">Course Planner & Resolver</div>
+        </div>
+      </div>
+
+      <div class="navActions">
+        <div class="pill">
+          <span class="muted">Student</span>
+          <b>{{ user.full_name }}</b>
+          <span class="muted">({{ user.student_id }})</span>
+        </div>
+        <a class="navLink" href="{{ url_for('courses_page') }}">Courses</a>
+        <form method="post" action="{{ url_for('logout') }}" style="margin:0" onsubmit="return true;">
+          <a class="btn btnGhost" href="{{ url_for('logout') }}">Logout</a>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid">
+      <div class="col6">
+        <div class="card">
+          <div class="h2">Welcome</div>
+          <div style="font-size:22px;font-weight:950;letter-spacing:.2px">{{ user.full_name }}</div>
+          <div class="muted" style="margin-top:6px">Student ID: <b style="color:white">{{ user.student_id }}</b></div>
+
+          <div class="planHeader">
+            <div class="muted" style="font-size:13px">Personalized course plan (topological order grouped by semesters)</div>
+          </div>
+
+          <div class="planSteps">
+            {% if plan and plan|length > 0 %}
+              {% for sem in plan %}
+                <div class="sem">
+                  <div class="semTitle">Semester {{ loop.index }}</div>
+                  <div class="courseChips">
+                    {% for cid in sem %}
+                      <div class="chip info">
+                        <div class="emoji" aria-hidden="true">➡️</div>
+                        <div>
+                          <div class="c">{{ cid }}</div>
+                          <div class="s">Next course</div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="muted">No remaining courses (or plan could not be generated).</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="col6">
+        <div class="card cardSoft">
+          <div class="h2">Your Progress</div>
+          <div class="grid" style="margin-top:6px">
+            <div class="col4">
+              <div class="stat">
+                <div>
+                  <div class="tag">Total Courses</div>
+                  <div class="big">{{ total_courses }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col4">
+              <div class="stat">
+                <div>
+                  <div class="tag">Completed</div>
+                  <div class="big" style="color:#34d399">{{ completed_count }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col4">
+              <div class="stat">
+                <div>
+                  <div class="tag">Remaining</div>
+                  <div class="big" style="color:#60a5fa">{{ remaining_count }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px" class="h2">Next choices</div>
+          <div class="planSteps">
+            {% if prereq_info and prereq_info|length > 0 %}
+              {% for item in prereq_info %}
+                {% if item.enrolled %}
+                  <div class="chip ok">
+                    <div class="emoji" aria-hidden="true">✅</div>
+                    <div>
+                      <div class="c">{{ item.id }}</div>
+                      <div class="s">Enrolled</div>
+                    </div>
+                  </div>
+                {% elif item.ok %}
+                  <div class="chip info">
+                    <div class="emoji" aria-hidden="true">➡️</div>
+                    <div>
+                      <div class="c">{{ item.id }}</div>
+                      <div class="s">Available</div>
+                    </div>
+                  </div>
+                {% else %}
+                  <div class="chip warn">
+                    <div class="emoji" aria-hidden="true">🔒</div>
+                    <div>
+                      <div class="c">{{ item.id }}</div>
+                      <div class="s">Missing: {{ item.missing|join(', ') }}</div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <div class="muted">Select Courses to enroll.</div>
+            {% endif %}
+          </div>
+
+          <div style="margin-top:14px" class="muted" >Tip: completed courses are stored in-memory for demo. Enrollments decrement seats safely.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

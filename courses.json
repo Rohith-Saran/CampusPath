@@ -1,0 +1,206 @@
+{
+  "courses": [
+    {
+      "id": "CS101",
+      "name": "Introduction to Computer Science",
+      "credits": 3,
+      "prerequisites": [],
+      "seats": 30,
+      "enrolled": 1
+    },
+    {
+      "id": "CS201",
+      "name": "Data Structures",
+      "credits": 3,
+      "prerequisites": [
+        "CS101"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS202",
+      "name": "Discrete Mathematics",
+      "credits": 3,
+      "prerequisites": [
+        "CS101",
+        "MATH101"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS301",
+      "name": "Algorithms",
+      "credits": 4,
+      "prerequisites": [
+        "CS201",
+        "CS202"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS302",
+      "name": "Database Systems",
+      "credits": 3,
+      "prerequisites": [
+        "CS201"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS401",
+      "name": "Operating Systems",
+      "credits": 4,
+      "prerequisites": [
+        "CS301"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS402",
+      "name": "Computer Networks",
+      "credits": 3,
+      "prerequisites": [
+        "CS301"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS403",
+      "name": "Machine Learning",
+      "credits": 4,
+      "prerequisites": [
+        "CS301",
+        "MATH301"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS404",
+      "name": "Software Engineering",
+      "credits": 3,
+      "prerequisites": [
+        "CS302"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS405",
+      "name": "Computer Architecture",
+      "credits": 3,
+      "prerequisites": [
+        "CS401"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS406",
+      "name": "Distributed Systems",
+      "credits": 4,
+      "prerequisites": [
+        "CS402"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS407",
+      "name": "Deep Learning",
+      "credits": 4,
+      "prerequisites": [
+        "CS403"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS408",
+      "name": "Cloud Computing",
+      "credits": 3,
+      "prerequisites": [
+        "CS406"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS409",
+      "name": "Cybersecurity",
+      "credits": 4,
+      "prerequisites": [
+        "CS402",
+        "CS401"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS410",
+      "name": "Natural Language Processing",
+      "credits": 4,
+      "prerequisites": [
+        "CS407"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS411",
+      "name": "Capstone Project",
+      "credits": 3,
+      "prerequisites": [
+        "CS404",
+        "CS409"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "CS412",
+      "name": "Advanced AI",
+      "credits": 4,
+      "prerequisites": [
+        "CS410",
+        "CS407"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "MATH101",
+      "name": "Calculus I",
+      "credits": 4,
+      "prerequisites": [],
+      "seats": 30,
+      "enrolled": 1
+    },
+    {
+      "id": "MATH201",
+      "name": "Linear Algebra",
+      "credits": 3,
+      "prerequisites": [
+        "MATH101"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    },
+    {
+      "id": "MATH301",
+      "name": "Statistics",
+      "credits": 3,
+      "prerequisites": [
+        "MATH201"
+      ],
+      "seats": 30,
+      "enrolled": 0
+    }
+  ]
+}

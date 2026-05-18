@@ -1,0 +1,47 @@
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 915-997-320
+127.0.0.1 - - [18/May/2026 10:29:02] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:29:02] "GET /courses HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:29:02] "GET /demo HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:29:02] "GET /demo-safe HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:30:50] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:30:50] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [18/May/2026 10:31:17] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:31:17] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [18/May/2026 10:31:29] "[33mPOST /register HTTP/1.1[0m" 404 -
+127.0.0.1 - - [18/May/2026 10:34:16] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:17] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:19] "GET /demo-safe HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:21] "GET /demo HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:21] "GET /demo HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:27] "[33mPOST /register HTTP/1.1[0m" 404 -
+127.0.0.1 - - [18/May/2026 10:34:32] "GET /demo HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:34] "GET /demo HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:37] "GET /courses HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:41] "GET /demo HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:43] "GET /demo-safe HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:44] "GET /courses HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:45] "GET /courses HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 10:34:47] "[33mPOST /register HTTP/1.1[0m" 404 -
+ * Detected change in '/Users/rohith/Desktop/CampusPath/registration.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 915-997-320
+Traceback (most recent call last):
+  File "/Users/rohith/Desktop/CampusPath/app.py", line 45, in <module>
+    # Run the development server on port 5000
+  File "/Users/rohith/Desktop/CampusPath/venv/lib/python3.9/site-packages/flask/app.py", line 662, in run
+    run_simple(t.cast(str, host), port, self, **options)
+  File "/Users/rohith/Desktop/CampusPath/venv/lib/python3.9/site-packages/werkzeug/serving.py", line 1116, in run_simple
+    run_with_reloader(
+  File "/Users/rohith/Desktop/CampusPath/venv/lib/python3.9/site-packages/werkzeug/_reloader.py", line 453, in run_with_reloader
+    ensure_echo_on()
+  File "/Users/rohith/Desktop/CampusPath/venv/lib/python3.9/site-packages/werkzeug/_reloader.py", line 433, in ensure_echo_on
+    termios.tcsetattr(sys.stdin, termios.TCSANOW, attributes)
+termios.error: (4, 'Interrupted system call')
