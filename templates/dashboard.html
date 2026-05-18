@@ -19,11 +19,13 @@
     .navActions{display:flex;align-items:center;gap:12px}
     .pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px 12px;display:flex;align-items:center;gap:8px}
     .pill b{font-size:13px}
+
     .btn{padding:10px 14px;border:none;border-radius:12px;cursor:pointer;font-weight:800;transition:transform .08s ease, filter .2s, background .2s}
     .btn:active{transform:translateY(1px)}
     .btnBlue{background:var(--accent);color:white}
     .btnGhost{background:transparent;color:white;border:1px solid rgba(255,255,255,.14)}
     .btnGhost:hover{filter:brightness(1.05)}
+
     .container{max-width:1100px;margin:0 auto;padding:20px 18px 60px}
 
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
@@ -58,9 +60,26 @@
     .warn{border-color:rgba(239,68,68,.35)}
     .warn .emoji{color:#f87171}
 
-    .navLinks{display:flex;gap:12px;align-items:center}
-    .navLink{color:white;text-decoration:none;font-weight:800;font-size:13px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10)}
-    .navLink:hover{filter:brightness(1.06)}
+    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.14);color:white;padding:12px 16px;border-radius:16px;display:none;z-index:999}
+    .toast.show{display:block}
+
+    /* modal */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:none;align-items:center;justify-content:center;padding:18px}
+    .overlay.show{display:flex}
+    .modal{width:min(720px,100%);background:#0b1227;border:1px solid rgba(255,255,255,.14);border-radius:18px;box-shadow:0 25px 120px rgba(0,0,0,.6);overflow:hidden}
+    .modalHeader{padding:14px 16px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .modalTitle{font-weight:950}
+    .modalBody{padding:16px}
+    .modalFooter{padding:14px 16px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:flex-end}
+    .modalClose{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);color:white;border-radius:12px;padding:8px 10px;cursor:pointer;font-weight:800}
+
+    .enrolledList{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto}
+    .enrolledItem{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);border-radius:14px}
+    .enrolledItem .left{display:flex;flex-direction:column;gap:2px}
+    .enrolledItem .cid{font-weight:950}
+    .enrolledItem .meta{font-size:12px;color:rgba(255,255,255,.7)}
+
+    .btnComplete{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.35);color:#bbf7d0;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:950}
   </style>
 </head>
 <body>
@@ -70,7 +89,7 @@
         <div class="logoBox" aria-hidden="true">🎓</div>
         <div>
           <div class="brandTitle">CampusPath</div>
-          <div class="brandSub">Course Planner & Resolver</div>
+          <div class="brandSub">Course Planner &amp; Resolver</div>
         </div>
       </div>
 
@@ -80,10 +99,8 @@
           <b>{{ user.full_name }}</b>
           <span class="muted">({{ user.student_id }})</span>
         </div>
-        <a class="navLink" href="{{ url_for('courses_page') }}">Courses</a>
-        <form method="post" action="{{ url_for('logout') }}" style="margin:0" onsubmit="return true;">
-          <a class="btn btnGhost" href="{{ url_for('logout') }}">Logout</a>
-        </form>
+        <a class="btn btnGhost" href="{{ url_for('courses_page') }}">Courses</a>
+        <a class="btn btnGhost" href="{{ url_for('logout') }}">Logout</a>
       </div>
     </div>
   </div>
@@ -98,6 +115,7 @@
 
           <div class="planHeader">
             <div class="muted" style="font-size:13px">Personalized course plan (topological order grouped by semesters)</div>
+            <button class="btn btnBlue" onclick="openCompleteModal()">Mark Course Complete</button>
           </div>
 
           <div class="planSteps">
@@ -122,6 +140,7 @@
               <div class="muted">No remaining courses (or plan could not be generated).</div>
             {% endif %}
           </div>
+
         </div>
       </div>
 
@@ -190,11 +209,123 @@
             {% endif %}
           </div>
 
-          <div style="margin-top:14px" class="muted" >Tip: completed courses are stored in-memory for demo. Enrollments decrement seats safely.</div>
+          <div style="margin-top:14px" class="muted">Tip: completed courses unlock their dependents. Enrollment alone does not unlock.</div>
         </div>
       </div>
     </div>
   </div>
+
+  <div id="toast" class="toast"></div>
+
+  <div id="complete-overlay" class="overlay">
+    <div class="modal">
+      <div class="modalHeader">
+        <div class="modalTitle">Mark Course Complete</div>
+        <button class="modalClose" onclick="closeCompleteModal()">Close</button>
+      </div>
+      <div class="modalBody">
+        <div class="muted" id="complete-subtitle" style="margin-bottom:12px">Loading enrolled courses...</div>
+        <div id="enrolled-list" class="enrolledList"></div>
+      </div>
+      <div class="modalFooter">
+        <button class="btn btnGhost" onclick="closeCompleteModal()">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const toastEl = document.getElementById('toast');
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(()=>toastEl.classList.remove('show'), 2600);
+    }
+
+    const overlayEl = document.getElementById('complete-overlay');
+    const enrolledListEl = document.getElementById('enrolled-list');
+    const subtitleEl = document.getElementById('complete-subtitle');
+    let previouslyAvailable = new Set();
+
+    async function openCompleteModal(){
+      overlayEl.classList.add('show');
+      enrolledListEl.innerHTML = '';
+      subtitleEl.textContent = 'Loading enrolled courses...';
+
+      try{
+        // snapshot currently available courses for unlock toast after completion
+        const statusResp = await fetch('/status');
+        const statusData = await statusResp.json();
+        if(!statusData.ok){
+          subtitleEl.textContent = 'Failed to load status.';
+          return;
+        }
+
+        previouslyAvailable = new Set(
+          statusData.courses.filter(c => c.status === 'available').map(c => c.id)
+        );
+
+        const enrolledCourses = statusData.courses.filter(c => c.status === 'enrolled');
+        if(enrolledCourses.length === 0){
+          subtitleEl.textContent = 'No enrolled courses to complete.';
+          return;
+        }
+        subtitleEl.textContent = 'Choose a course to mark as complete:';
+
+        enrolledCourses.forEach(c => {
+          const item = document.createElement('div');
+          item.className = 'enrolledItem';
+          item.innerHTML = `
+            <div class="left">
+              <div class="cid">${c.id}</div>
+              <div class="meta">Enrolled course</div>
+            </div>
+            <button class="btnComplete" onclick="markComplete('${c.id}')">Mark as Complete</button>
+          `;
+          enrolledListEl.appendChild(item);
+        });
+      }catch(e){
+        subtitleEl.textContent = 'Network error while loading.';
+      }
+    }
+
+    function closeCompleteModal(){
+      overlayEl.classList.remove('show');
+    }
+
+    async function markComplete(courseId){
+      try{
+        const resp = await fetch('/complete', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({course_id: courseId})
+        });
+        const data = await resp.json();
+        if(!data.ok && data.success !== true){
+          toast('Could not complete course');
+          return;
+        }
+
+        // compute newly unlocked courses
+        const statusResp = await fetch('/status');
+        const statusData = await statusResp.json();
+        const currentlyAvailable = new Set(
+          statusData.courses.filter(c => c.status === 'available').map(c => c.id)
+        );
+
+        const unlocked = [...currentlyAvailable].filter(x => !previouslyAvailable.has(x));
+
+        toast(`${courseId} completed. ${unlocked.length ? unlocked.join(', ') + ' unlocked.' : 'No new unlocks.'}`);
+        closeCompleteModal();
+
+        // Update stats cards in-place from fresh /status
+        // (Dashboard template renders stats on initial load; this ensures unlock toast correctness.)
+        setTimeout(()=>window.location.reload(), 350);
+
+      }catch(e){
+        toast('Network error while completing course');
+      }
+    }
+  </script>
 </body>
 </html>
 

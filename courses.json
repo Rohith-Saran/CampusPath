@@ -6,7 +6,7 @@
       "credits": 3,
       "prerequisites": [],
       "seats": 30,
-      "enrolled": 1
+      "enrolled": 16
     },
     {
       "id": "CS201",
@@ -16,7 +16,7 @@
         "CS101"
       ],
       "seats": 30,
-      "enrolled": 0
+      "enrolled": 4
     },
     {
       "id": "CS202",
@@ -27,7 +27,7 @@
         "MATH101"
       ],
       "seats": 30,
-      "enrolled": 0
+      "enrolled": 1
     },
     {
       "id": "CS301",
@@ -38,7 +38,7 @@
         "CS202"
       ],
       "seats": 30,
-      "enrolled": 0
+      "enrolled": 1
     },
     {
       "id": "CS302",
@@ -48,7 +48,7 @@
         "CS201"
       ],
       "seats": 30,
-      "enrolled": 0
+      "enrolled": 1
     },
     {
       "id": "CS401",
@@ -89,7 +89,7 @@
         "CS302"
       ],
       "seats": 30,
-      "enrolled": 0
+      "enrolled": 1
     },
     {
       "id": "CS405",
@@ -180,7 +180,7 @@
       "credits": 4,
       "prerequisites": [],
       "seats": 30,
-      "enrolled": 1
+      "enrolled": 9
     },
     {
       "id": "MATH201",
@@ -190,7 +190,7 @@
         "MATH101"
       ],
       "seats": 30,
-      "enrolled": 0
+      "enrolled": 1
     },
     {
       "id": "MATH301",
@@ -200,7 +200,7 @@
         "MATH201"
       ],
       "seats": 30,
-      "enrolled": 0
+      "enrolled": 1
     }
   ]
 }

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>C++ Mutex Demo - CampusPath</title>
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0a0a0a;color:#e2e8f0}
+    .nav{background:#0f1629;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:20}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:42px;height:42px;border-radius:14px;background:rgba(59,130,246,.18);border:1px solid rgba(59,130,246,.35);display:grid;place-items:center;font-size:20px}
+    .brandTitle{font-weight:900;letter-spacing:.2px}
+    .backBtn{background:transparent;border:1px solid rgba(59,130,246,.45);color:#93c5fd;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:900;transition:background .15s ease, border-color .15s ease, transform .08s ease}
+    .backBtn:hover{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.7)}
+    .backBtn:active{transform:translateY(1px)}
+
+    .wrap{max-width:1200px;margin:0 auto;padding:28px 18px 52px}
+    .hero{text-align:center;margin:8px 0 22px}
+    .hero h1{margin:0;font-size:38px;line-height:1.1;letter-spacing:.3px}
+    .glow{color:#60a5fa;text-shadow:0 0 18px rgba(59,130,246,.55),0 0 48px rgba(59,130,246,.22)}
+    .sub{margin-top:10px;color:#a5b4fc;font-weight:700}
+    .badge{display:inline-block;margin-top:12px;padding:8px 12px;border-radius:999px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.35);font-weight:800;color:#bfdbfe;font-size:13px}
+
+    .panels{display:flex;gap:18px;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+    .panel{flex:1;min-width:360px;border-radius:12px;padding:24px;border:2px solid rgba(255,255,255,.12);background:#111}
+    .panelLeft{border-color:#ef4444;background:#1a0a0a}
+    .panelRight{border-color:#10b981;background:#0a1a0a}
+    .panel h2{margin:0;font-size:20px;letter-spacing:.2px}
+    .panelLeft h2{color:#f87171}
+    .panelRight h2{color:#34d399}
+    .panel .pSub{margin-top:8px;color:rgba(226,232,240,.82);font-weight:700}
+
+    .out{margin-top:14px;background:#000;border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.12)}
+    .out pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:12px;line-height:1.45}
+
+    .bigCount{margin-top:12px;font-weight:1000;font-size:44px;letter-spacing:.2px}
+    .bigRed{color:#ef4444}
+    .bigGreen{color:#10b981}
+    .waitYellow{color:#fbbf24;font-weight:900;font-size:15px}
+
+    .bottomBadge{margin-top:14px;font-weight:1000;border-radius:10px;padding:10px 12px;text-align:center;border:1px solid rgba(255,255,255,.14)}
+    .badRed{background:rgba(239,68,68,.12);color:#fca5a5;border-color:rgba(239,68,68,.25)}
+    .badGreen{background:rgba(16,185,129,.12);color:#a7f3d0;border-color:rgba(16,185,129,.25)}
+
+    .errorCard{border:1px solid rgba(239,68,68,.35);background:rgba(239,68,68,.10);border-radius:14px;padding:18px;margin-top:20px}
+    .errorCard h3{margin:0;color:#f87171}
+    .errorCard p{color:#fca5a5;line-height:1.5;margin:10px 0 0}
+
+    .codeSection{margin-top:22px}
+    .codeTitle{font-weight:950;margin:0 0 10px}
+    .codeBox{background:#0d1117;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px}
+    .codeBox pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:14px;line-height:1.55}
+
+    .concepts{margin-top:20px}
+    .conceptsRow{display:flex;gap:16px;flex-wrap:wrap}
+    .conceptCard{flex:1;min-width:260px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);border-radius:14px;padding:16px}
+    .conceptCard h4{margin:0 0 8px;font-size:16px}
+    .conceptCard p{margin:0;color:rgba(226,232,240,.75);line-height:1.45}
+
+    .footer{margin-top:34px;text-align:center;color:rgba(226,232,240,.65);font-weight:800}
+    .footer span{color:#93c5fd}
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">🎓</div>
+      <div class="brandTitle">CampusPath</div>
+    </div>
+    <button class="backBtn" onclick="window.location.href='/courses'">Back to Courses</button>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <h1 class="glow">C++ Mutex Lock Demo</h1>
+      <div class="sub">OS Concept - Process Synchronization using std::mutex and std::thread</div>
+      <div class="badge">Compiled and run in real time</div>
+    </div>
+
+    {% if error %}
+      <div class="errorCard">
+        <h3>Build/Run Error</h3>
+        <p>{{ error_message }}</p>
+        <p><b>Installation instructions:</b> sudo apt install g++ or brew install gcc</p>
+        <button class="backBtn" style="margin-top:14px" onclick="window.location.href='/courses'">Back</button>
+      </div>
+    {% else %}
+      <div class="panels">
+        <div class="panel panelLeft">
+          <h2>WITHOUT Mutex Lock</h2>
+          <div class="pSub">Race Condition - Data Corruption</div>
+          <div class="out"><pre>{{ without_lock_output }}</pre></div>
+          <div class="bigCount bigRed" id="enrolled-without">30</div>
+          <div class="bottomBadge badRed">DATA CORRUPTED</div>
+        </div>
+
+        <div class="panel panelRight">
+          <h2>WITH Mutex Lock</h2>
+          <div class="pSub">Process Synchronization - Data Safe</div>
+          <div class="out"><pre>{{ with_lock_output }}</pre></div>
+          <div class="bigCount bigGreen" id="enrolled-with">30</div>
+          <div class="waitYellow">Waitlisted count: 70</div>
+          <div class="bottomBadge badGreen">MUTEX LOCK WORKED</div>
+        </div>
+      </div>
+
+      <div class="codeSection">
+        <div class="codeTitle">C++ Implementation</div>
+        <div class="codeBox">
+          <pre>
+{% set code = cpp_code %}
+{{ code
+  | replace('std::mutex', '<span style="color:#3b82f6; font-weight:900">std::mutex</span>')
+  | replace('mtx.lock()', '<span style="color:#10b981; font-weight:900">mtx.lock()</span>')
+  | replace('mtx.unlock()', '<span style="color:#10b981; font-weight:900">mtx.unlock()</span>')
+  | replace('std::thread', '<span style="color:#f59e0b; font-weight:900">std::thread</span>')
+  | replace('std::cout', '<span style="color:#a78bfa; font-weight:900">std::cout</span>')
+| safe }}
+          </pre>
+        </div>
+      </div>
+
+      <div class="concepts">
+        <div class="codeTitle" style="margin-bottom:10px">Key Concepts</div>
+        <div class="conceptsRow">
+          <div class="conceptCard">
+            <h4>Race Condition</h4>
+            <p>When threads access shared data simultaneously without protection.</p>
+          </div>
+          <div class="conceptCard">
+            <h4>Mutex Lock</h4>
+            <p>Mutual exclusion ensures only one thread accesses the critical section.</p>
+          </div>
+          <div class="conceptCard">
+            <h4>Result</h4>
+            <p>Exactly 30 enrolled rest waitlisted proving synchronization works.</p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="footer">CampusPath - <span>Hackathon Project</span></div>
+  </div>
+</body>
+</html>
+

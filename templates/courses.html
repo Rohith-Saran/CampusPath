@@ -19,7 +19,8 @@
     .navActions{display:flex;align-items:center;gap:12px}
     .pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px 12px;display:flex;align-items:center;gap:8px}
     .pill b{font-size:13px}
-    .btn{padding:10px 14px;border:none;border-radius:12px;cursor:pointer;font-weight:900;transition:transform .08s ease, filter .2s}
+
+    .btn{padding:10px 14px;border:none;border-radius:12px;cursor:pointer;font-weight:900;transition:transform .08s ease, filter .2s, background .2s}
     .btn:active{transform:translateY(1px)}
     .btnBlue{background:var(--accent);color:white}
     .btnGhost{background:transparent;color:white;border:1px solid rgba(255,255,255,.14)}
@@ -53,11 +54,10 @@
     .btnAvail{background:var(--accent);color:white}
     .btnLock{background:rgba(239,68,68,.16);border:1px solid rgba(239,68,68,.35);color:#fecaca}
     .btnDone{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.35);color:#bbf7d0}
-    .btnWait{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);color:#fde68a}
+    .btnComplete{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.35);color:#bbf7d0;padding:8px 10px;border-radius:10px;font-weight:800;margin-left:8px}
 
     .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.14);color:white;padding:12px 16px;border-radius:16px;display:none;z-index:999}
     .toast.show{display:block}
-
   </style>
 </head>
 <body>
@@ -67,7 +67,7 @@
         <div class="logoBox" aria-hidden="true">🎓</div>
         <div>
           <div class="brandTitle">CampusPath</div>
-          <div class="brandSub">Course Planner & Resolver</div>
+          <div class="brandSub">Course Planner &amp; Resolver</div>
         </div>
       </div>
 
@@ -92,9 +92,22 @@
       <div class="muted" style="font-size:13px">Seats update after enrollment.</div>
     </div>
 
-    <div class="grid">
+    <div style="margin:18px 0 20px; padding:14px; border:1px solid rgba(255,255,255,.12); border-radius:18px; background:rgba(0,0,0,.10);">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <div>
+          <div style="font-size:16px; font-weight:1000;">OS Mutex Demo</div>
+          <div class="muted" style="font-size:13px; margin-top:6px;">
+            Demonstrates why mutex locks prevent seat overbooking in concurrent enrollment.
+          </div>
+        </div>
+        <button class="btnSmall btnAvail" onclick="window.location.href='/cpp-demo'">Run C++ Mutex Demo</button>
+      </div>
+    </div>
+
+    <div class="grid" id="courses-grid">
       {% for c in courses %}
-        <div class="card">
+        <div class="card" data-course-id="{{ c.id }}" id="course-card-{{ c.id }}">
+
           <div class="courseTop">
             <div>
               <div class="code">{{ c.id }}</div>
@@ -104,10 +117,12 @@
           </div>
 
           <div class="metaRow">
-            <div class="badge">Seats left: <span id="seats-{{ c.id }}">{{ c.seats_left }}</span></div>
+            <div class="badge">Seats left: <span id="seat-bar-{{ c.id }}">{{ c.seats_left }}</span></div>
           </div>
 
-          <div class="status">
+
+          <div class="status" id="status-badge-{{ c.id }}" data-status-course-id="{{ c.id }}">
+
             {% if c.status == 'Completed' %}
               <span class="icon" aria-hidden="true">✅</span><span>Completed</span>
             {% elif c.status == 'Enrolled' %}
@@ -132,9 +147,15 @@
             {% endif %}
           </div>
 
-          <div class="btnRow">
-            {% if c.status == 'Completed' or c.status == 'Enrolled' %}
-              <button class="btnSmall btnDone" disabled>Enrolled</button>
+          <div class="btnRow" id="action-btn-{{ c.id }}">
+
+              {% if c.status == 'Completed' %}
+                <button class="btnSmall btnDone" disabled>Enrolled</button>
+              {% elif c.status == 'Enrolled' %}
+                <div style="display:flex;gap:8px;width:100%">
+                <button class="btnSmall btnDone" disabled style="flex:1">Enrolled</button>
+                <button class="btnComplete" onclick="completeCourse('{{ c.id }}')">Mark Complete</button>
+                </div>
             {% elif c.status == 'Available' %}
               <button class="btnSmall btnAvail" onclick="enroll('{{ c.id }}')">Enroll</button>
             {% else %}
@@ -156,10 +177,91 @@
       setTimeout(()=>toastEl.classList.remove('show'), 2600);
     }
 
+    function statusToLabel(status){
+      if(status === 'completed') return {icon:'✅', text:'Completed'};
+      if(status === 'enrolled') return {icon:'✅', text:'Enrolled'};
+      if(status === 'available') return {icon:'🟦', text:'Available'};
+      if(status === 'locked') return {icon:'🔒', text:'Locked'};
+      return {icon:'❓', text:status};
+    }
+
+    function renderActionButton(courseId, status){
+      const actionsEl = document.getElementById('action-btn-' + courseId);
+      if(!actionsEl) return;
+
+      if(status === 'available'){
+        actionsEl.innerHTML = `<button class="btnSmall btnAvail" onclick="enroll('${courseId}')">Enroll</button>`;
+      }else if(status === 'locked'){
+        actionsEl.innerHTML = `<button class="btnSmall btnLock" disabled>Locked</button>`;
+      }else if(status === 'enrolled' || status === 'completed'){
+        actionsEl.innerHTML = `<button class="btnSmall btnDone" disabled>Enrolled</button>`;
+      }else{
+        actionsEl.innerHTML = `<button class="btnSmall btnLock" disabled>Locked</button>`;
+      }
+    }
+
+    async function refreshAllCards(newlyUnlockedSet){
+      const resp = await fetch('/status');
+
+      const data = await resp.json();
+      if(!data.ok) return;
+
+      const cardEls = document.querySelectorAll('[data-course-id]');
+      const cardById = {};
+      cardEls.forEach(el => { cardById[el.dataset.courseId] = el; });
+
+      data.courses.forEach(c => {
+        const card = cardById[c.id];
+        if(!card) return;
+
+        const label = statusToLabel(c.status);
+
+        const statusEl = document.getElementById('status-badge-' + c.id);
+        if(statusEl){
+          statusEl.innerHTML = `<span class="icon" aria-hidden="true">${label.icon}</span><span>${label.text}</span>`;
+        }
+
+        // replace the inner button markup inside the action container
+        const actionBtnContainer = document.getElementById('action-btn-' + c.id);
+        if(actionBtnContainer){
+          if(c.status === 'available'){
+            actionBtnContainer.innerHTML = `<button class="btnSmall btnAvail" onclick="enroll('${c.id}')">Enroll</button>`;
+          }else if(c.status === 'locked'){
+            actionBtnContainer.innerHTML = `<button class="btnSmall btnLock" disabled>Locked</button>`;
+          }else if(c.status === 'enrolled' || c.status === 'completed'){
+            actionBtnContainer.innerHTML = `<button class="btnSmall btnDone" disabled>Enrolled</button>`;
+          }else{
+            actionBtnContainer.innerHTML = `<button class="btnSmall btnLock" disabled>Locked</button>`;
+          }
+        }else{
+          renderActionButton(c.id, c.status);
+        }
+
+        const seatEl = document.getElementById('seat-bar-' + c.id);
+        if(seatEl){
+          seatEl.textContent = c.seats;
+        }
+
+        if(newlyUnlockedSet && c.status === 'available' && newlyUnlockedSet.has(c.id)){
+          // handled by caller toast
+        }
+      });
+    }
+
+
+    async function getAvailableSet(){
+      const resp = await fetch('/status');
+      const data = await resp.json();
+      if(!data.ok) return new Set();
+      return new Set(data.courses.filter(c => c.status === 'available').map(c => c.id));
+    }
+
     async function enroll(courseId){
-      const btnText = 'Enrolling...';
       try{
+        const beforeAvailable = await getAvailableSet();
+
         const resp = await fetch('/enroll', {
+
           method: 'POST',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({course_id: courseId})
@@ -176,14 +278,82 @@
           return;
         }
 
-        document.getElementById('seats-' + courseId).textContent = data.seats_left;
         toast('Enrolled successfully!');
-        // Best effort refresh to update statuses
-        setTimeout(()=>window.location.reload(), 700);
+        const before = await getAvailableSet();
+        await refreshAllCards();
+        const after = await getAvailableSet();
+        const newlyUnlocked = [...after].filter(x => !before.has(x));
+        if(newlyUnlocked.length){
+          toast(newlyUnlocked.join(', ') + ' is now unlocked');
+        }
+
+        // notify other tabs to refresh UI
+        if(window.__cp_bc) window.__cp_bc.postMessage('refresh');
+        else localStorage.setItem('campuspath-refresh', Date.now());
+
       }catch(e){
         toast('Network error');
       }
     }
+
+    async function handleAfterCompleteToast(){
+      // called after completion actions
+      const before = await getAvailableSet();
+      await refreshAllCards();
+      const after = await getAvailableSet();
+      const unlocked = [...after].filter(x => !before.has(x));
+      if(unlocked.length){
+        toast(unlocked.join(', ') + ' is now unlocked');
+      }
+    }
+
+    async function completeCourse(courseId){
+      try{
+        const before = await getAvailableSet();
+        const resp = await fetch('/complete', {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({course_id: courseId})
+        });
+        const data = await resp.json();
+        if(!data.success){
+          toast('Could not complete course');
+          return;
+        }
+        toast(data.message || 'Course completed');
+        await refreshAllCards(before);
+        // compute newly unlocked and inform user
+        const after = await getAvailableSet();
+        const unlocked = [...after].filter(x => !before.has(x));
+        if(unlocked.length) toast(unlocked.join(', ') + ' is now unlocked');
+        // notify other tabs to refresh UI
+        if(window.__cp_bc) window.__cp_bc.postMessage('refresh');
+        else localStorage.setItem('campuspath-refresh', Date.now());
+      }catch(e){
+        toast('Network error');
+      }
+    }
+
+    // Cross-tab refresh: BroadcastChannel (preferred) and localStorage fallback
+    try{
+      if('BroadcastChannel' in window){
+        window.__cp_bc = new BroadcastChannel('campuspath-updates');
+        window.__cp_bc.onmessage = (ev) => {
+          if(ev && ev.data === 'refresh') refreshAllCards();
+        };
+      }
+    }catch(e){/* ignore */}
+
+    window.addEventListener('storage', (ev) => {
+      if(ev.key === 'campuspath-refresh'){
+        refreshAllCards();
+      }
+    });
+
+    async function runCppMutexDemo(){
+      // navigation is handled by onclick in button (window.location)
+      return;
+    }
+
+    // On load, nothing else.
   </script>
 </body>
 </html>
