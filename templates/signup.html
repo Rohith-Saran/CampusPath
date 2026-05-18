@@ -4,46 +4,203 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CampusPath - Signup</title>
+
   <style>
-    :root{--navy:#0f172a;--accent:#3b82f6;--white:#ffffff;--muted:rgba(255,255,255,.7);--card:rgba(255,255,255,.06);--shadow:0 20px 60px rgba(0,0,0,.35)}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:var(--navy);color:var(--white);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-    .wrap{width:100%;max-width:480px;animation:fadeIn .6s ease both}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .card{background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:16px;box-shadow:var(--shadow);padding:26px}
-    .logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:18px}
-    .cap{width:38px;height:38px;border-radius:12px;background:rgba(59,130,246,.15);display:grid;place-items:center;border:1px solid rgba(59,130,246,.35)}
-    h1{font-size:22px;letter-spacing:.2px;margin:0;text-align:center}
-    p.sub{margin:6px 0 18px;text-align:center;color:var(--muted);font-size:13px}
+    :root{
+      --navy:#0f172a;
+      --accent:#2563eb;
+      --accent-hover:#1d4ed8;
+      --white:#ffffff;
+      --muted:rgba(255,255,255,.72);
+      --card:rgba(255,255,255,.08);
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+    }
 
-    .field{position:relative;margin:16px 0}
-    .field input{width:100%;padding:14px 14px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.15);color:var(--white);outline:none;transition:border-color .2s, box-shadow .2s}
-    .field input:focus{border-color:rgba(59,130,246,.8);box-shadow:0 0 0 4px rgba(59,130,246,.18)}
+    *{
+      box-sizing:border-box;
+    }
 
-    .field label{position:absolute;left:14px;top:13px;color:rgba(255,255,255,.65);font-size:13px;transition:transform .18s ease, opacity .18s ease;pointer-events:none}
-    .field input:focus + label, .field input:not(:placeholder-shown) + label{transform:translateY(-14px) scale(.92);opacity:.95}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(37,99,235,.25), transparent 30%),
+        linear-gradient(135deg,#0f172a,#111827);
+      color:var(--white);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
 
-    .error{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);color:#fecaca;padding:10px 12px;border-radius:12px;margin-bottom:14px;font-size:13px}
+    .wrap{
+      width:100%;
+      max-width:480px;
+      animation:fadeIn .6s ease both;
+    }
 
-    .btn{width:100%;padding:13px 14px;border:none;border-radius:12px;background:var(--accent);color:white;font-weight:700;cursor:pointer;transition:transform .08s ease, filter .2s}
-    .btn:hover{filter:brightness(1.05)}
-    .btn:active{transform:translateY(1px)}
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(10px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
 
-    .linkRow{margin-top:14px;display:flex;justify-content:center;gap:8px;font-size:13px;color:var(--muted)}
-    a{color:rgba(255,255,255,.92);text-decoration:none}
-    a:hover{text-decoration:underline}
+    .card{
+      background:var(--card);
+      backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:32px;
+    }
 
-    .foot{margin-top:14px;text-align:center;color:rgba(255,255,255,.5);font-size:12px}
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      justify-content:center;
+      margin-bottom:22px;
+    }
+
+    .cap{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      background:rgba(59,130,246,.15);
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(59,130,246,.35);
+      font-size:20px;
+    }
+
+    h1{
+      font-size:24px;
+      margin:0;
+      text-align:center;
+    }
+
+    p.sub{
+      margin:6px 0 0;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .field{
+      position:relative;
+      margin:18px 0;
+    }
+
+    .field input{
+      width:100%;
+      padding:15px 14px 13px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+      color:var(--white);
+      outline:none;
+      transition:.25s ease;
+      font-size:14px;
+    }
+
+    .field input:focus{
+      border-color:rgba(59,130,246,.85);
+      box-shadow:0 0 0 4px rgba(59,130,246,.18);
+      background:rgba(255,255,255,.08);
+    }
+
+    .field label{
+      position:absolute;
+      left:14px;
+      top:14px;
+      color:rgba(255,255,255,.62);
+      font-size:13px;
+      transition:.2s ease;
+      pointer-events:none;
+    }
+
+    .field input:focus + label,
+    .field input:not(:placeholder-shown) + label{
+      transform:translateY(-15px) scale(.9);
+      opacity:1;
+    }
+
+    .error{
+      background:rgba(239,68,68,.15);
+      border:1px solid rgba(239,68,68,.35);
+      color:#fecaca;
+      padding:10px 12px;
+      border-radius:12px;
+      margin-bottom:14px;
+      font-size:13px;
+    }
+
+    .btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:14px;
+      background:linear-gradient(135deg,var(--accent),#3b82f6);
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s ease;
+      margin-top:8px;
+    }
+
+    .btn:hover{
+      background:linear-gradient(135deg,var(--accent-hover),#2563eb);
+      transform:translateY(-1px);
+    }
+
+    .btn:active{
+      transform:scale(.99);
+    }
+
+    .linkRow{
+      margin-top:16px;
+      display:flex;
+      justify-content:center;
+      gap:6px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    a{
+      color:#93c5fd;
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .foot{
+      margin-top:18px;
+      text-align:center;
+      color:rgba(255,255,255,.45);
+      font-size:12px;
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="card">
+
       <div class="logo">
-        <div class="cap" aria-hidden="true">🎓</div>
+        <div class="cap">🎓</div>
+
         <div>
-          <h1>Create your CampusPath</h1>
-          <p class="sub">Join the course resolver</p>
+          <h1>Create Account</h1>
+          <p class="sub">Start your journey with CampusPath</p>
         </div>
       </div>
 
@@ -52,34 +209,43 @@
       {% endif %}
 
       <form method="post" action="{{ url_for('signup') }}">
+
         <div class="field">
           <input id="full_name" name="full_name" type="text" required placeholder=" " />
           <label for="full_name">Full Name</label>
         </div>
+
         <div class="field">
           <input id="student_id" name="student_id" type="text" required placeholder=" " />
           <label for="student_id">Student ID</label>
         </div>
+
         <div class="field">
           <input id="email" name="email" type="email" required placeholder=" " />
-          <label for="email">Email</label>
+          <label for="email">University Email</label>
         </div>
+
         <div class="field">
           <input id="password" name="password" type="password" required placeholder=" " />
-          <label for="password">Password</label>
+          <label for="password">Create Password</label>
         </div>
 
-        <button class="btn" type="submit">Register</button>
+        <button class="btn" type="submit">
+          Create Account
+        </button>
 
         <div class="linkRow">
-          <span>Already have an account?</span>
-          <a href="{{ url_for('login') }}">Sign in</a>
+          <span>Already registered?</span>
+          <a href="{{ url_for('login') }}">Login</a>
         </div>
+
       </form>
 
-      <div class="foot">Mock auth • In-memory users</div>
+      <div class="foot">
+        Secure student signup • Demo authentication
+      </div>
+
     </div>
   </div>
 </body>
 </html>
-

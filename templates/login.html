@@ -4,43 +4,217 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CampusPath - Login</title>
+
   <style>
-    :root{--navy:#0f172a;--accent:#3b82f6;--white:#ffffff;--muted:rgba(255,255,255,.7);--card:rgba(255,255,255,.06);--shadow:0 20px 60px rgba(0,0,0,.35)}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:var(--navy);color:var(--white);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-    .wrap{width:100%;max-width:420px;animation:fadeIn .6s ease both}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .card{background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:16px;box-shadow:var(--shadow);padding:26px}
-    .logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:18px}
-    .cap{width:38px;height:38px;border-radius:12px;background:rgba(59,130,246,.15);display:grid;place-items:center;border:1px solid rgba(59,130,246,.35)}
-    h1{font-size:22px;letter-spacing:.2px;margin:0;text-align:center}
-    p.sub{margin:6px 0 18px;text-align:center;color:var(--muted);font-size:13px}
+    :root{
+      --navy:#0f172a;
+      --accent:#3b82f6;
+      --white:#ffffff;
+      --muted:rgba(255,255,255,.7);
+      --card:rgba(255,255,255,.08);
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+    }
 
-    .field{position:relative;margin:18px 0}
-    .field input{width:100%;padding:14px 14px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.15);color:var(--white);outline:none;transition:border-color .2s, box-shadow .2s}
-    .field input:focus{border-color:rgba(59,130,246,.8);box-shadow:0 0 0 4px rgba(59,130,246,.18)}
+    *{
+      box-sizing:border-box;
+    }
 
-    .field label{position:absolute;left:14px;top:13px;color:rgba(255,255,255,.65);font-size:13px;transition:transform .18s ease, opacity .18s ease;pointer-events:none}
-    .field input:focus + label, .field input:not(:placeholder-shown) + label{transform:translateY(-14px) scale(.92);opacity:.95}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Arial,sans-serif;
+      background:linear-gradient(135deg,#0f172a,#1e293b,#111827);
+      color:var(--white);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
 
-    .error{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);color:#fecaca;padding:10px 12px;border-radius:12px;margin-bottom:14px;font-size:13px}
+    .wrap{
+      width:100%;
+      max-width:420px;
+      animation:fadeIn .6s ease both;
+    }
 
-    .btn{width:100%;padding:13px 14px;border:none;border-radius:12px;background:var(--accent);color:white;font-weight:700;cursor:pointer;transition:transform .08s ease, filter .2s}
-    .btn:hover{filter:brightness(1.05)}
-    .btn:active{transform:translateY(1px)}
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(10px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
 
-    .linkRow{margin-top:14px;display:flex;justify-content:center;gap:8px;font-size:13px;color:var(--muted)}
-    a{color:rgba(255,255,255,.92);text-decoration:none}
-    a:hover{text-decoration:underline}
+    .card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:28px;
+      backdrop-filter:blur(10px);
+      transition:transform .25s ease;
+    }
 
-    .foot{margin-top:14px;text-align:center;color:rgba(255,255,255,.5);font-size:12px}
+    .card:hover{
+      transform:translateY(-3px);
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      justify-content:center;
+      margin-bottom:18px;
+    }
+
+    .cap{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      background:rgba(59,130,246,.15);
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(59,130,246,.35);
+      font-size:20px;
+    }
+
+    h1{
+      font-size:24px;
+      margin:0;
+      text-align:center;
+    }
+
+    p.sub{
+      margin:6px 0 18px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .field{
+      position:relative;
+      margin:18px 0;
+    }
+
+    .field input{
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);
+      color:var(--white);
+      outline:none;
+      transition:.25s;
+    }
+
+    .field input:focus{
+      border-color:rgba(59,130,246,.8);
+      box-shadow:0 0 0 4px rgba(59,130,246,.18);
+      background:rgba(0,0,0,.25);
+    }
+
+    .field label{
+      position:absolute;
+      left:14px;
+      top:13px;
+      color:rgba(255,255,255,.65);
+      font-size:13px;
+      transition:.18s ease;
+      pointer-events:none;
+    }
+
+    .field input:focus + label,
+    .field input:not(:placeholder-shown) + label{
+      transform:translateY(-14px) scale(.92);
+      opacity:.95;
+    }
+
+    .toggle-pass{
+      position:absolute;
+      right:14px;
+      top:14px;
+      cursor:pointer;
+      font-size:12px;
+      color:#93c5fd;
+    }
+
+    .error{
+      background:rgba(239,68,68,.15);
+      border:1px solid rgba(239,68,68,.35);
+      color:#fecaca;
+      padding:10px 12px;
+      border-radius:12px;
+      margin-bottom:14px;
+      font-size:13px;
+    }
+
+    .options{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin:10px 0 18px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .btn{
+      width:100%;
+      padding:13px 14px;
+      border:none;
+      border-radius:12px;
+      background:linear-gradient(135deg,#2563eb,#3b82f6);
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.08);
+    }
+
+    .btn:active{
+      transform:translateY(1px);
+    }
+
+    .linkRow{
+      margin-top:16px;
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    a{
+      color:#bfdbfe;
+      text-decoration:none;
+    }
+
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .foot{
+      margin-top:16px;
+      text-align:center;
+      color:rgba(255,255,255,.5);
+      font-size:12px;
+    }
   </style>
 </head>
+
 <body>
+
   <div class="wrap">
     <div class="card">
+
       <div class="logo">
-        <div class="cap" aria-hidden="true">🎓</div>
+        <div class="cap">🎓</div>
         <div>
           <h1>CampusPath</h1>
           <p class="sub">Course registration resolver</p>
@@ -52,26 +226,59 @@
       {% endif %}
 
       <form method="post" action="{{ url_for('login') }}">
+
         <div class="field">
           <input id="email" name="email" type="email" required placeholder=" " />
           <label for="email">Email</label>
         </div>
+
         <div class="field">
           <input id="password" name="password" type="password" required placeholder=" " />
           <label for="password">Password</label>
+          <span class="toggle-pass" onclick="togglePassword()">Show</span>
         </div>
 
-        <button class="btn" type="submit">Sign In</button>
+        <div class="options">
+          <label>
+            <input type="checkbox">
+            Remember me
+          </label>
+
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <button class="btn" type="submit">
+          Sign In
+        </button>
 
         <div class="linkRow">
           <span>New here?</span>
           <a href="{{ url_for('signup') }}">Create account</a>
         </div>
+
       </form>
 
-      <div class="foot">Secure session demo • No database required</div>
+      <div class="foot">
+        Secure session demo • No database required
+      </div>
+
     </div>
   </div>
+
+  <script>
+    function togglePassword() {
+      const pass = document.getElementById("password");
+      const toggle = document.querySelector(".toggle-pass");
+
+      if (pass.type === "password") {
+        pass.type = "text";
+        toggle.textContent = "Hide";
+      } else {
+        pass.type = "password";
+        toggle.textContent = "Show";
+      }
+    }
+  </script>
+
 </body>
 </html>
-
