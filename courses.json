@@ -58,7 +58,7 @@
         "CS301"
       ],
       "seats": 30,
-      "enrolled": 0
+      "enrolled": 1
     },
     {
       "id": "CS402",
@@ -68,7 +68,7 @@
         "CS301"
       ],
       "seats": 30,
-      "enrolled": 0
+      "enrolled": 1
     },
     {
       "id": "CS403",
